@@ -1,5 +1,5 @@
 const express= require("express")
-import cors from "cors";
+const cors =require('cors')
 const app=express()
 const data=require('./MOCK_DATA.json')
 const fs= require("fs")
@@ -22,10 +22,15 @@ app.post('/Post',(req,res)=>{
   res.json({ message: "Data added successfully", user: newUser })
     })
 })
-app.get('/:id',(req,res)=>{
-    const id=Number(req.params.id)
-    const user=data.find((user)=>user.id==id)
-    return res.json(user)
+app.delete('/delete/:id',(req,res)=>{
+    let id=Number(req.params.id)
+    let index =data.indexOf(data=>data.id===id)
+   
+   data.splice(index,1)
+fs.writeFile('./MOCK_DATA.json',JSON.stringify(data,null,2),(err)=>{
+      res.json({ message: "User deleted" });
+})
+   
 })
 
 app.listen(PORT,()=>console.log("HI server"))
